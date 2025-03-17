@@ -68,6 +68,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Gestion des stations
     const createStationPopup = (station) => {
+        const date = new Date(station.date_modification).toUTCString();
+        
         return `
             <div class="custom-popup">
                 <h3>${station.nom}</h3>
@@ -86,7 +88,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     ${station.etat}
                 </div>
                 <div class="update-time">
-                    Mise à jour : ${new Date(station.date_modification).toLocaleString()}
+                    Mise à jour : ${date.toLocaleString('fr-FR', { timeZone: 'Europe/Paris' })}
                 </div>
             </div>
         `;
@@ -130,8 +132,9 @@ document.addEventListener('DOMContentLoaded', () => {
     // Chargement des données
     async function fetchStations() {
         try {
-            const response = await fetch('data.json');
-            return (await response.json()).velos;
+            const response = await fetch('http://localhost:8000/api/stations');
+            const data = await response.json();
+            return data.velos;
         } catch (error) {
             console.error('Erreur lors du chargement des données:', error);
             return [];
