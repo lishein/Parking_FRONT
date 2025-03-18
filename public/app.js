@@ -68,7 +68,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Gestion des stations
     const createStationPopup = (station) => {
-        const date = new Date(station.date_modification).toUTCString();
+        const date = new Date(station.date_modification);
         
         return `
             <div class="custom-popup">
@@ -88,7 +88,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     ${station.etat}
                 </div>
                 <div class="update-time">
-                    Mise à jour : ${date.toLocaleString('fr-FR', { timeZone: 'Europe/Paris' })}
+                    Mise à jour : ${date.toLocaleString('fr-FR', { timeZone: 'UTC' })}
                 </div>
             </div>
         `;
