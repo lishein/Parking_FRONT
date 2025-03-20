@@ -9,17 +9,23 @@ document.addEventListener('DOMContentLoaded', () => {
         try {
             const response = await fetch('http://localhost:8000/parkings');
             const data = await response.json();
+            console.log(data); // Ajoutez cette ligne pour voir les données reçues
 
             markers.forEach(marker => map.removeLayer(marker)); // Nettoyage des anciens marqueurs
             markers = [];
 
             data.parkings.forEach(parking => {
-                // Conversion des coordonnées Lambert 93 vers WGS84
-                const coords = convertLambert93ToWGS84(parking.longitude, parking.latitude);
-                let marker = L.marker([coords.latitude, coords.longitude])
-                    .addTo(map)
-                    .bindPopup(`<b>${parking.nom}</b><br>Places disponibles: ${parking.toto}`);
-                markers.push(marker);
+                // Vérification des coordonnées
+                if (isFinite(parking.longitude) && isFinite(parking.latitude)) {
+                    // Conversion des coordonnées Lambert 93 vers WGS84
+                    const coords = convertLambert93ToWGS84(parking.longitude, parking.latitude);
+                    let marker = L.marker([coords.latitude, coords.longitude])
+                        .addTo(map)
+                        .bindPopup(`<b>${parking.nom}</b><br>Places disponibles: ${parking.nbr_libre}`);
+                    markers.push(marker);
+                } else {
+                    console.error('Coordonnées invalides pour le parking:', parking);
+                }
             });
         } catch (error) {
             console.error('Erreur lors de la récupération des données des parkings:', error);
